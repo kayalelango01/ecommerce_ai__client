@@ -1,0 +1,123 @@
+/* CollectionsPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+.collections-page {
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: #f5f0e8;
+  padding-top: 70px; /* navbar height */
+}
+
+/* ── Header ── */
+.collections-header {
+  text-align: center;
+  padding: 64px 24px 32px;
+}
+.collections-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #c9a84c;
+  margin: 0 0 12px;
+}
+.collections-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #f5f0e8;
+  margin: 0 0 20px;
+}
+.gold-divider {
+  width: 60px;
+  height: 1px;
+  background: #c9a84c;
+  margin: 0 auto;
+}
+
+/* ── Category Filter ── */
+.category-filter {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  background: transparent;
+  border: 1px solid #333;
+  color: #888;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.filter-btn:hover {
+  border-color: #c9a84c;
+  color: #c9a84c;
+}
+.filter-btn.active {
+  background: #c9a84c;
+  border-color: #c9a84c;
+  color: #0a0a0a;
+  font-weight: 700;
+}
+
+/* ── Search Status ── */
+.search-status {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0 0 16px;
+}
+.search-status span {
+  color: #c9a84c;
+}
+.clear-search {
+  margin-left: 12px;
+  background: none;
+  border: none;
+  color: #666;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.clear-search:hover {
+  color: #c9a84c;
+}
+
+/* ── Products Grid ── */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 24px 48px 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── No Results ── */
+.no-results {
+  text-align: center;
+  padding: 80px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    padding: 16px;
+    gap: 16px;
+  }
+  .collections-title {
+    font-size: 2rem;
+  }
+}

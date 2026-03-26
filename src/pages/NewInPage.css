@@ -1,0 +1,84 @@
+/* NewInPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
+
+.newin-page {
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #f5f0e8;
+  padding-top: 70px;
+}
+
+.newin-header {
+  text-align: center;
+  padding: 64px 24px 32px;
+}
+.newin-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #c9a84c;
+  margin: 0 0 12px;
+}
+.newin-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #f5f0e8;
+  margin: 0 0 20px;
+}
+.gold-divider {
+  width: 60px;
+  height: 1px;
+  background: #c9a84c;
+  margin: 0 auto 20px;
+}
+.newin-desc {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  color: #888;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.search-status {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  color: #888;
+  margin: 0 0 16px;
+}
+.search-status span { color: #c9a84c; }
+.clear-search {
+  margin-left: 12px;
+  background: none;
+  border: none;
+  color: #666;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.clear-search:hover { color: #c9a84c; }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 24px 48px 64px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.no-results {
+  text-align: center;
+  padding: 80px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  color: #555;
+}
+
+@media (max-width: 768px) {
+  .products-grid { padding: 16px; gap: 16px; }
+  .newin-title { font-size: 2rem; }
+}

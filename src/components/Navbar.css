@@ -1,0 +1,165 @@
+/* Navbar.css - Black & Gold theme for LUXE navbar */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap');
+
+/* ── Base Navbar ── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #0a0a0a;
+  border-bottom: 1px solid #c9a84c44;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 70px;
+  box-sizing: border-box;
+}
+
+/* ── Logo ── */
+.navbar-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #c9a84c;
+  letter-spacing: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.navbar-logo:hover {
+  opacity: 0.8;
+}
+
+/* ── Nav Links ── */
+.navbar-links {
+  list-style: none;
+  display: flex;
+  gap: 36px;
+  margin: 0;
+  padding: 0;
+}
+.navbar-links li {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+  position: relative;
+  padding-bottom: 4px;
+}
+.navbar-links li::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #c9a84c;
+  transition: width 0.3s ease;
+}
+.navbar-links li:hover,
+.navbar-links li.active {
+  color: #c9a84c;
+}
+.navbar-links li:hover::after,
+.navbar-links li.active::after {
+  width: 100%;
+}
+
+/* ── Right Icons ── */
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.icon-btn {
+  position: relative;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+.icon-btn:hover {
+  color: #c9a84c;
+}
+.signout-btn:hover {
+  color: #e55;
+}
+
+/* ── Cart Badge ── */
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #c9a84c;
+  color: #0a0a0a;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Search Dropdown ── */
+.search-bar-dropdown {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 100%;
+  background: #111;
+  border-bottom: 1px solid #c9a84c44;
+  padding: 16px 48px;
+  box-sizing: border-box;
+  animation: slideDown 0.25s ease;
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.search-bar-dropdown form {
+  display: flex;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.search-bar-dropdown input {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #c9a84c55;
+  color: #fff;
+  padding: 10px 16px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-bar-dropdown input:focus {
+  border-color: #c9a84c;
+}
+.search-bar-dropdown button {
+  background: #c9a84c;
+  color: #0a0a0a;
+  border: none;
+  padding: 10px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.search-bar-dropdown button:hover {
+  background: #b8943d;
+}
