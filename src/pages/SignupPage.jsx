@@ -47,19 +47,25 @@ const SignupPage = () => {
     }
     setIsSubmitting(true);
     try {
+      console.log('Attempting signup...', { name, email, phoneNumber });
       const response = await api.post('/auth/signup', {
         name: formData.name,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         password: formData.password
       });
+      console.log('Signup response:', response.data);
       localStorage.setItem('luxe_token', response.data.token);
       localStorage.setItem('luxe_user', JSON.stringify(response.data.user));
+      localStorage.setItem('isLoggedIn', 'true');
       setIsSubmitting(false);
       navigate("/login");
     } catch (error) {
+      console.error('Signup error:', error.response?.data || error.message);
       setIsSubmitting(false);
-      setErrors({ submit: error.response?.data?.message || 'Signup failed' });
+      setErrors({ 
+        submit: error.response?.data?.message || error.message || 'Signup failed. Please try again.' 
+      });
     }
   };
 
@@ -94,6 +100,12 @@ const SignupPage = () => {
           </div>
 
           <form className="signup-form" onSubmit={handleSubmit} noValidate>
+            {errors.submit && (
+              <div className="submit-error-banner">
+                <span>⚠️</span>
+                <span>{errors.submit}</span>
+              </div>
+            )}
             {fields.map(({ name, label, type, icon, placeholder }) => (
               <div
                 key={name}
