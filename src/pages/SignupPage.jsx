@@ -61,7 +61,10 @@ const SignupPage = () => {
       setIsSubmitting(false);
       navigate("/login");
     } catch (error) {
-      console.error('Signup error:', error.response?.data || error.message);
+      console.error('Signup error FULL DETAILS:', error);
+      console.error('Error response:', error.response);
+      console.error('Error data:', error.response?.data);
+      console.error('Status:', error.response?.status);
       setIsSubmitting(false);
       setErrors({ 
         submit: error.response?.data?.message || error.message || 'Signup failed. Please try again.' 
