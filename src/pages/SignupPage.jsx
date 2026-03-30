@@ -47,7 +47,7 @@ const SignupPage = () => {
     }
     setIsSubmitting(true);
     try {
-      console.log('Attempting signup...', { name, email, phoneNumber });
+      console.log('Attempting signup...', { name: formData.name, email: formData.email, phoneNumber: formData.phoneNumber });
       const response = await api.post('/auth/signup', {
         name: formData.name,
         email: formData.email,
