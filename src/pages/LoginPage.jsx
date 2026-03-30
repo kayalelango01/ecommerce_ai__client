@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 import "./LoginPage.css";
 
 const LoginPage = () => {
@@ -34,18 +35,18 @@ const LoginPage = () => {
       return;
     }
     setIsSubmitting(true);
-    await new Promise((res) => setTimeout(res, 1500));
-
-    const savedData = JSON.parse(localStorage.getItem("signupData") || "{}");
-    if (
-      savedData.email === formData.email &&
-      savedData.password === formData.password
-    ) {
-      localStorage.setItem("isLoggedIn", "true");
+    try {
+      const response = await api.post('/auth/login', {
+        email: formData.email,
+        password: formData.password
+      });
+      localStorage.setItem('luxe_token', response.data.token);
+      localStorage.setItem('luxe_user', JSON.stringify(response.data.user));
+      localStorage.setItem('isLoggedIn', 'true');
       setIsSubmitting(false);
       navigate("/landing");
-    } else {
-      setLoginError("Invalid email or password. Please try again.");
+    } catch (error) {
+      setLoginError(error.response?.data?.message || 'Invalid email or password');
       setIsSubmitting(false);
     }
   };

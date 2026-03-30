@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import api from "../utils/api";
 import "./CartPage.css";
 
 function CartPage() {
@@ -11,10 +12,26 @@ function CartPage() {
   const formatPrice = (price) =>
     new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(price);
 
-  // Load cart from localStorage on mount
+  // Load cart from API or localStorage on mount
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("luxe_cart") || "[]");
-    setCartItems(stored);
+    const fetchCart = async () => {
+      try {
+        const token = localStorage.getItem('luxe_token');
+        if (token) {
+          const response = await api.get('/cart');
+          if (response.data.success) {
+            setCartItems(response.data.cart.items);
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch cart from API:', error);
+      }
+      // Fallback to localStorage
+      const stored = JSON.parse(localStorage.getItem("luxe_cart") || "[]");
+      setCartItems(stored);
+    };
+    fetchCart();
   }, []);
 
   // Save cart to localStorage whenever it changes
@@ -25,38 +42,102 @@ function CartPage() {
   };
 
   // Increase quantity
-  const increaseQty = (index) => {
+  const increaseQty = async (index) => {
+    const item = cartItems[index];
+    const newQty = item.quantity + 1;
+    
+    try {
+      const token = localStorage.getItem('luxe_token');
+      if (token && item._id) {
+        await api.put(`/cart/${item._id}`, { quantity: newQty });
+        const updated = [...cartItems];
+        updated[index].quantity = newQty;
+        setCartItems(updated);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to update quantity via API:', error);
+    }
+    
+    // Fallback to localStorage
     const updated = [...cartItems];
-    updated[index].quantity += 1;
+    updated[index].quantity = newQty;
     saveCart(updated);
   };
 
   // Decrease quantity (remove if goes to 0)
-  const decreaseQty = (index) => {
-    const updated = [...cartItems];
-    if (updated[index].quantity <= 1) {
-      updated.splice(index, 1);
-    } else {
-      updated[index].quantity -= 1;
+  const decreaseQty = async (index) => {
+    const item = cartItems[index];
+    
+    if (item.quantity <= 1) {
+      await removeItem(index);
+      return;
     }
+    
+    const newQty = item.quantity - 1;
+    
+    try {
+      const token = localStorage.getItem('luxe_token');
+      if (token && item._id) {
+        await api.put(`/cart/${item._id}`, { quantity: newQty });
+        const updated = [...cartItems];
+        updated[index].quantity = newQty;
+        setCartItems(updated);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to update quantity via API:', error);
+    }
+    
+    // Fallback to localStorage
+    const updated = [...cartItems];
+    updated[index].quantity = newQty;
     saveCart(updated);
   };
 
   // Remove item completely
-  const removeItem = (index) => {
+  const removeItem = async (index) => {
+    const item = cartItems[index];
+    
+    try {
+      const token = localStorage.getItem('luxe_token');
+      if (token && item._id) {
+        await api.delete(`/cart/${item._id}`);
+        const updated = [...cartItems];
+        updated.splice(index, 1);
+        setCartItems(updated);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to remove item via API:', error);
+    }
+    
+    // Fallback to localStorage
     const updated = [...cartItems];
     updated.splice(index, 1);
     saveCart(updated);
   };
 
   // Clear entire cart
-  const clearCart = () => {
+  const clearCart = async () => {
+    try {
+      const token = localStorage.getItem('luxe_token');
+      if (token) {
+        await api.delete('/cart');
+        setCartItems([]);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to clear cart via API:', error);
+    }
+    
+    // Fallback to localStorage
     saveCart([]);
   };
 
   // Calculate totals
   const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal > 10000 ? 0 : 500; // Free shipping above ₹10,000
+  const shipping = subtotal < 10000 ? 500 : 0; // Free shipping above ₹10,000
   const total = subtotal + shipping;
 
   return (
@@ -94,7 +175,7 @@ function CartPage() {
             </div>
 
             {cartItems.map((item, index) => (
-              <div className="cart-item" key={index}>
+              <div className="cart-item" key={item._id || item.productId || item.id || index}>
                 {/* Image */}
                 <div className="item-image-wrap">
                   <img src={item.image} alt={item.name} className="item-image" />

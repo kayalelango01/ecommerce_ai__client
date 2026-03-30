@@ -1,12 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
 import { getNewProducts } from "../data/productData";
+import api from "../utils/api";
 import "./NewInPage.css";
 
 function NewInPage() {
   const [searchTerm, setSearchTerm] = useState("");
-  const newProducts = getNewProducts();
+  const [newProducts, setNewProducts] = useState(getNewProducts());
+
+  // Fetch new products from API on mount
+  useEffect(() => {
+    const fetchNewProducts = async () => {
+      try {
+        const response = await api.get('/products?isNew=true');
+        if (response.data.success && response.data.products.length > 0) {
+          setNewProducts(response.data.products);
+        }
+      } catch (error) {
+        console.error('Failed to fetch new products, using local data:', error);
+        // fallback to imported local data already set in state
+      }
+    };
+    fetchNewProducts();
+  }, []);
 
   // Filter by search
   const filtered = newProducts.filter(
@@ -42,7 +59,7 @@ function NewInPage() {
       {filtered.length > 0 ? (
         <div className="products-grid">
           {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product._id || product.id} product={product} />
           ))}
         </div>
       ) : (

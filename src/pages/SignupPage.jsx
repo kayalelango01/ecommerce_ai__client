@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 import "./SignupPage.css";
 
 const SignupPage = () => {
@@ -45,11 +46,21 @@ const SignupPage = () => {
       return;
     }
     setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((res) => setTimeout(res, 1500));
-    localStorage.setItem("signupData", JSON.stringify(formData));
-    setIsSubmitting(false);
-    navigate("/login");
+    try {
+      const response = await api.post('/auth/signup', {
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password
+      });
+      localStorage.setItem('luxe_token', response.data.token);
+      localStorage.setItem('luxe_user', JSON.stringify(response.data.user));
+      setIsSubmitting(false);
+      navigate("/login");
+    } catch (error) {
+      setIsSubmitting(false);
+      setErrors({ submit: error.response?.data?.message || 'Signup failed' });
+    }
   };
 
   const fields = [

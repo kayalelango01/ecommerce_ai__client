@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import ProductCard from "../components/ProductCard";
 import { products } from "../data/productData";
+import api from "../utils/api";
 import "./CollectionsPage.css";
 
 function CollectionsPage() {
@@ -9,6 +10,24 @@ function CollectionsPage() {
   const [activeCategory, setActiveCategory] = useState("all");
   // State for search term (set via navbar search)
   const [searchTerm, setSearchTerm] = useState("");
+  // State for products from API
+  const [apiProducts, setApiProducts] = useState([]);
+
+  // Fetch products from API on mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get('/products');
+        if (response.data.success) {
+          setApiProducts(response.data.products);
+        }
+      } catch (error) {
+        console.error('Failed to fetch products, using local data:', error);
+        // fallback to imported local data
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const categories = [
     { key: "all",     label: "All" },
@@ -18,8 +37,11 @@ function CollectionsPage() {
     { key: "bags",    label: "Bags" },
   ];
 
+  // Use API products if available, otherwise fallback to local data
+  const displayProducts = apiProducts.length > 0 ? apiProducts : products;
+
   // Filter products by category and search
-  const filtered = products.filter((p) => {
+  const filtered = displayProducts.filter((p) => {
     const matchCategory = activeCategory === "all" || p.category === activeCategory;
     const matchSearch =
       searchTerm === "" ||
@@ -64,7 +86,7 @@ function CollectionsPage() {
       {filtered.length > 0 ? (
         <div className="products-grid">
           {filtered.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product._id || product.id} product={product} />
           ))}
         </div>
       ) : (

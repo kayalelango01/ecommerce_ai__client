@@ -1,6 +1,7 @@
 // Navbar.jsx - Shared navbar for all LUXE pages
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import api from "../utils/api";
 import "./Navbar.css";
 
 function Navbar({ onSearch }) {
@@ -14,17 +15,30 @@ function Navbar({ onSearch }) {
 
   // Update cart count whenever component mounts or storage changes
   useEffect(() => {
-    const updateCount = () => {
+    const updateCartCount = async () => {
+      try {
+        const token = localStorage.getItem('luxe_token');
+        if (token) {
+          const response = await api.get('/cart');
+          if (response.data.success) {
+            const total = response.data.cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            setCartCount(total);
+            return;
+          }
+        }
+      } catch (error) {
+        // Fallback to localStorage
+      }
       const cart = JSON.parse(localStorage.getItem("luxe_cart") || "[]");
       const total = cart.reduce((sum, item) => sum + item.quantity, 0);
       setCartCount(total);
     };
-    updateCount();
-    window.addEventListener("storage", updateCount);
-    window.addEventListener("cartUpdated", updateCount); // custom event
+    updateCartCount();
+    window.addEventListener("storage", updateCartCount);
+    window.addEventListener("cartUpdated", updateCartCount); // custom event
     return () => {
-      window.removeEventListener("storage", updateCount);
-      window.removeEventListener("cartUpdated", updateCount);
+      window.removeEventListener("storage", updateCartCount);
+      window.removeEventListener("cartUpdated", updateCartCount);
     };
   }, []);
 
@@ -40,7 +54,9 @@ function Navbar({ onSearch }) {
 
   // Sign out - clear storage and go to login
   const handleSignOut = () => {
+    localStorage.removeItem("luxe_token");
     localStorage.removeItem("luxe_user");
+    localStorage.removeItem("isLoggedIn");
     navigate("/");
   };
 

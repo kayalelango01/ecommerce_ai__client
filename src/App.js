@@ -15,6 +15,12 @@ import DesignersPage from "./pages/DesignersPage";
 import AboutPage from "./pages/AboutPage";
 import CartPage from "./pages/CartPage";
 
+// Protected route component
+const ProtectedRoute = ({ children }) => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('luxe_token');
+  return isLoggedIn ? children : <Navigate to="/login" />;
+};
+
 function App() {
   return (
     <Router>
@@ -26,14 +32,14 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 
-        {/* Main Pages */}
-        <Route path="/landing" element={<LandingPage />} />
-        <Route path="/collections" element={<CollectionsPage />} />
-        <Route path="/new-in" element={<NewInPage />} />
-        <Route path="/sale" element={<SalePage />} />
-        <Route path="/designers" element={<DesignersPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/cart" element={<CartPage />} />
+        {/* Main Pages - Protected */}
+        <Route path="/landing" element={<ProtectedRoute><LandingPage /></ProtectedRoute>} />
+        <Route path="/collections" element={<ProtectedRoute><CollectionsPage /></ProtectedRoute>} />
+        <Route path="/new-in" element={<ProtectedRoute><NewInPage /></ProtectedRoute>} />
+        <Route path="/sale" element={<ProtectedRoute><SalePage /></ProtectedRoute>} />
+        <Route path="/designers" element={<ProtectedRoute><DesignersPage /></ProtectedRoute>} />
+        <Route path="/about" element={<ProtectedRoute><AboutPage /></ProtectedRoute>} />
+        <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
 
         {/* Catch unknown routes → back to login */}
         <Route path="*" element={<Navigate to="/login" />} />
